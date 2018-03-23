@@ -1,0 +1,8 @@
+{
+    "mysql_host": "localhost",
+    "mysql_port": "3306",
+    "mysql_username": "root",
+    "mysql_password": "b8zyFueyE3p1np9x",
+    "mysql_database": "users",
+    "mysql_dialect": "mysql"
+}

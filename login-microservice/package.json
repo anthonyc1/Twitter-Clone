@@ -1,0 +1,23 @@
+{
+  "name": "login-microservice",
+  "version": "1.0.0",
+  "description": "login-microservice has endpoints for creating account, login, and account verification.",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon"
+  },
+  "author": "Aaron Spitalny",
+  "license": "MIT",
+  "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.2.0",
+    "mysql": "^2.15.0",
+    "mysql2": "^1.5.3",
+    "nodemailer": "^4.6.0",
+    "sequelize": "^4.37.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.12"
+  }
+}
