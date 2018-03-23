@@ -17,8 +17,15 @@ async function getItem(id) {
     });
 }
 
+async function searchItems(data) {
+    return addItemModel.find({
+        timestamp: {'$lte': data.timestamp}
+    }).sort({ field: 'asc', _id: -1 }).limit(data.limit);
+}
+
 module.exports = {
     createItem,
     getItem,
-    getAll
+    getAll,
+    searchItems
 }

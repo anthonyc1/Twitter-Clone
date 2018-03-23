@@ -110,6 +110,13 @@ router.get('/item/:id', function(req, res){
 router.post('/search', function(req, res){
 	timestamp = req.body.timestamp;
 	limit = req.body.limit;
+	var items = mongoose_addItem.searchItems({timestamp: timestamp, limit: limit});
+	items.then(function(items){
+		res.send({status: "OK", items: items});
+	}).catch(err => {
+		console.log(err);
+		res.send({status: "error", error: err})
+	})
 });
 
 module.exports = router;
