@@ -1,0 +1,21 @@
+{
+  "name": "post-microservice",
+  "version": "1.0.0",
+  "description": "post-microservice has endpoints for creating, getting, and searching content posts",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon"
+  },
+  "author": "Anthony Chan",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.2.0",
+    "mongoose": "^5.0.8",
+    "reload": "^2.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.12"
+  }
+}
