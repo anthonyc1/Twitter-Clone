@@ -14,20 +14,15 @@ router.get('/item/:id', function(req, res){
 	var item = mongoose_addItem.getItem(mongoose.Types.ObjectId(id));
 	item.then(function(item){
 		if (item){
-			username = item.username;
-			retweeted = item.retweeted;
-			content = item.content;
-			timestamp = item.timestamp;
-			likes = item.likes;
 			res.send({status: "OK", item: {
 				id: id,
-				username: username,
+				username: item.username,
 				property:{
-					likes: likes
+					likes: item.likes
 				},
-				retweeted: retweeted,
-				content: content,
-				timestamp: timestamp
+				retweeted: item.retweeted,
+				content: item.content,
+				timestamp: item.timestamp
 			}})
 		}
 		 else {
