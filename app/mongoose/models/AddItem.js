@@ -5,7 +5,7 @@ const AddItemSchema = mongoose.Schema({
     content: {type: String, required: true},
     childType: {type: String, required: true},
     likes: {type: Number, required: true},
-    retweets: {type: String, required: true},
+    retweeted: {type: String, required: true},
     timestamp: {type: String, required: true},
     id: {type: mongoose.Schema.Types.ObjectId, required: true, index:{unique: true}}
 });

@@ -4,9 +4,7 @@ var addItemModel = require('../models/AddItem.js');
 
 async function createItem(data) {
     var item = new addItemModel(data);
-    return item.save(function(error){
-        console.log(error);
-    });
+    return item.save();
 }
 
 async function getAll() {
