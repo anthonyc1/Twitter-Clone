@@ -9,15 +9,19 @@ router.use(bodyParser.urlencoded({
     extended: false
 }));
 
-router.post('/search', function(req, res){
-	timestamp = req.body.timestamp;
-	limit = req.body.limit;
-	var items = mongoose_item.searchItems({timestamp: timestamp, limit: limit});
-	items.then(function(items){
-		res.send({status: "OK", items: items});
+router.delete('/item/:id', function(req, res){
+	id = req.params.id;
+	var item = mongoose_item.getItem(mongoose.Types.ObjectId(id));
+	item.then(function(result){
+		if (result){
+			mongoose_item.deleteItem(mongoose.Types.ObjectId(id));
+			res.sendStatus(200);
+		}
+		 else {
+			res.sendStatus(404);
+		}
 	}).catch(err => {
 		console.log(err);
-		res.send({status: "error", error: err})
 	})
 });
 

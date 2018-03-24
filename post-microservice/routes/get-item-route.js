@@ -1,7 +1,7 @@
 var express = require('express'),
  bodyParser = require('body-parser'),
  mongoose = require('mongoose'),
- mongoose_addItem = require('../mongoose/services/addItemService.js');
+ mongoose_item = require('../mongoose/services/addItemService.js');
 
 var router = express.Router();
 router.use(bodyParser.json());
@@ -11,8 +11,9 @@ router.use(bodyParser.urlencoded({
 
 router.get('/item/:id', function(req, res){
 	id = req.params.id;
-	var item = mongoose_addItem.getItem(mongoose.Types.ObjectId(id));
+	var item = mongoose_item.getItem(mongoose.Types.ObjectId(id));
 	item.then(function(item){
+		console.log(item);
 		if (item){
 			res.send({status: "OK", item: {
 				id: id,

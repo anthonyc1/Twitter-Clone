@@ -1,24 +1,33 @@
 var mongoose = require('mongoose');
-var addItemModel = require('../models/AddItem.js');
+var itemModel = require('../models/AddItem.js');
 
 
 async function createItem(data) {
-    var item = new addItemModel(data);
-    return item.save();
+    var item = new itemModel(data);
+    item.save(function(err){
+        if (err) return err;
+    });
+    return item._id;
 }
 
 async function getAll() {
-    return addItemModel.find({});
+    return itemModel.find({});
 }
 
 async function getItem(id) {
-    return addItemModel.findOne({
-        id: id
+    return itemModel.findOne({
+        _id: id
+    });
+}
+
+async function deleteItem(id) {
+    return itemModel.findOneAndRemove({_id: id},function(err){
+        if (err) return err;
     });
 }
 
 async function searchItems(data) {
-    return addItemModel.find({
+    return itemModel.find({
         timestamp: {'$lte': data.timestamp}
     }).sort({ field: 'asc', _id: -1 }).limit(data.limit);
 }
@@ -26,6 +35,7 @@ async function searchItems(data) {
 module.exports = {
     createItem,
     getItem,
+    deleteItem,
     getAll,
     searchItems
 }

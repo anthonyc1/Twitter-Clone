@@ -3,7 +3,7 @@ var express = require('express'),
  jwt = require('jsonwebtoken'),
  fs = require('fs'),
  mongoose = require('mongoose'),
- mongoose_addItem = require('../mongoose/services/addItemService.js');
+ mongoose_item = require('../mongoose/services/addItemService.js');
 
 var router = express.Router();
 router.use(bodyParser.json());
@@ -17,7 +17,6 @@ var secret = obj.secret;
 var validContentTypes = [null, 'retweet','reply'];
 
 router.post('/additem', function(req, res){
-	id = mongoose.Types.ObjectId();
 	var userJWT = jwt.verify(req.cookies.token, secret, function(err, decoded){
 		if (err){
 			res.send({status: "error", error: "invalid session"});
@@ -25,16 +24,16 @@ router.post('/additem', function(req, res){
 			if (req.body.content == null || !(new Set(validContentTypes).has(req.body.childType)))
 				res.send({status: "error", error: "unable to create user"});
 			else {
-				var item = mongoose_addItem.createItem({
+				var item = mongoose_item.createItem({
 					username: decoded.username,
 					content: req.body.content,
 					childType: req.body.childType,
 					likes: 0,
 					retweeted: 0,
-					timestamp: Date.now(),
-					id: id
+					timestamp: Date.now()
+				}).then(function(id){
+					res.send({status: "OK", id: id});
 				});
-				res.send({status: "OK", id: id});
 			}
 		}
 	})
