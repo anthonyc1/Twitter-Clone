@@ -2,22 +2,37 @@
   "name": "login-microservice",
   "version": "1.0.0",
   "description": "login-microservice has endpoints for creating account, login, and account verification.",
-  "main": "app.js",
+  "main": "app/app.js",
   "scripts": {
-    "start": "nodemon"
+    "start": "nodemon -e css,js,json,ejs --watch app",
+    "dev": "webpack -wd"
   },
   "author": "Aaron Spitalny",
   "license": "MIT",
   "dependencies": {
     "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.7",
     "express": "^4.16.2",
     "jsonwebtoken": "^8.2.0",
+    "kafka-node": "^2.4.1",
     "mysql": "^2.15.0",
     "mysql2": "^1.5.3",
     "nodemailer": "^4.6.0",
-    "sequelize": "^4.37.3"
+    "sequelize": "^4.37.3",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-icons": "^2.2.7",
+    "react-router-dom": "^4.2.2",
+    "react-tap-event-plugin": "^3.0.2",
+    "material-ui": "^0.20.0",
+    "reload": "^2.2.2"
   },
   "devDependencies": {
-    "nodemon": "^1.14.12"
+      "babel-cli": "^6.26.0",
+      "babel-loader": "^7.1.2",
+      "babel-preset-env": "^1.6.1",
+      "babel-preset-react": "^6.24.1",
+      "nodemon": "^1.14.12",
+      "webpack": "^3.11.0"
   }
 }
