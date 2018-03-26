@@ -1,0 +1,149 @@
+var express = require('express');
+var router = express.Router();
+var bodyParser = require('body-parser');
+var bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
+
+
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({
+    extended: false
+}));
+
+router.get(['/pirates', '/', 'posts'], async function(req, res) {
+    var configFile = req.app.get('appConfig');
+    var service = req.app.get('userService');
+    try {
+        if (req.cookies == undefined || Object.keys(req.cookies).length === 0) {
+            res.render('index-tmpl', {
+                pageID: 'login',
+                title: "pirates"
+            });
+        } else {
+            var userJWTPayload = jwt.verify(req.cookies.token, configFile.secret)
+            let verify = await service.getUser(userJWTPayload.username);
+            if (!verify) {
+                   res.render('index-tmpl', {
+                        pageID: 'login',
+                        title: "pirates"
+                    });
+            } else {
+                if (verify.active == false) {
+                       res.render('index-tmpl', {
+                            pageID: 'login',
+                            title: "pirates"
+                        });
+                } else {
+                    res.render('posts-tmpl', {
+                        pageID: 'posts',
+                        name: userJWTPayload.username,
+                        date: new Date(),
+                        title: "pirates"
+                    });
+                }
+            }
+        }
+    } catch (err) {
+        console.log(err)
+        res.render('index-tmpl', {
+             pageID: 'signIn',
+             title: "pirates"
+         });
+    }
+});
+
+router.post('/login', async function(req, res) {
+    var configFile = req.app.get('appConfig');
+    var log = new Log();
+    var service = req.app.get('userService');
+    try {
+        if ((await verifyInput(req.body, log)) == false) {
+            res.send(JSON.stringify({
+                "status": log.type,
+                "error": log.shortMessage,
+                "errorMessage": log.longMessage
+            }));
+        } else {
+            let login = await service.getUser(req.body.username);
+            if (!login) {
+                res.send(JSON.stringify({
+                    "status": 'error',
+                    "error": "username",
+                    "errorMessage": "incorrect username"
+                }));
+            } else {
+                if (!(bcrypt.compareSync(req.body.password, login.password))){
+                    res.send(JSON.stringify({
+                        "status": 'error',
+                        "error": "password",
+                        "errorMessage": "incorrect password"
+                    }));
+                } else if (login.active == false) {
+                    res.send(JSON.stringify({
+                        "status": 'error',
+                        "error": "username",
+                        "errorMessage": "account is inactive"
+                    }));
+                } else {
+                    var jwtPayload = {
+                        username: req.body.username,
+                        id: login.user_id,
+                        email: login.email,
+                        hash: login.hash
+                    }
+                    var authJwtToken = jwt.sign(jwtPayload, configFile.secret)
+                    res.cookie('token', authJwtToken, {
+                        expires: new Date(Date.now() + 900000)
+                    });
+                    res.send(JSON.stringify({
+                        "status": 'OK'
+                    }));
+                }
+            }
+        }
+    } catch (err) {
+        console.log(err)
+        res.send({
+            "status": 'error',
+            "errro": err
+        });
+    }
+});
+
+router.get('/logout', async function(req, res) {
+    res.clearCookie('token');
+    res.redirect("/");
+});
+
+async function verifyInput(body, response) {
+    var flag = true;
+    if (flag == true) {
+        if (body.username.length < 1) {
+            flag = false;
+            log.type = "error";
+            log.code = 1;
+            log.shortMessage = "username";
+            log.longMessage = "please enter a valid username";
+        }
+    }
+    if (flag == true) {
+        if (body.password.length < 4) {
+            flag = false;
+            log.type = "error";
+            log.code = 1;
+            log.shortMessage = "password";
+            log.longMessage = "password must have minimum of 4 characters";
+        }
+    }
+    return flag;
+}
+
+function Log(type, code, shortMessage, longMessage) {
+    this.type = type;
+    this.code = code;
+    this.shortMessage = shortMessage;
+    this.longMessage = longMessage;
+}
+
+
+module.exports = router;

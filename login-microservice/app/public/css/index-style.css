@@ -1,0 +1,37 @@
+html {
+    font-family: 'Roboto', sans-serif;
+}
+
+.form-style {
+    width: 350px;
+    height: 500px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.button-style {
+    padding: 30px 0 0 84px;
+}
+
+.card-fields {
+    padding: 80px 0 0 40px;
+}
+
+.header-style {
+    padding: 80px 0 0 40px;
+    font-size: 24px;
+}
+
+.input-button {
+    background-color: #73FCD6;
+    cursor: pointer;
+    min-height: 36px;
+    min-width: 88px;
+    max-height: 36px;
+    max-width: 88px;
+    color:white;
+}
