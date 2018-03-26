@@ -1,0 +1,16 @@
+{
+  "name": "email-microservice",
+  "version": "1.0.0",
+  "description": "email-microservice",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon"
+  },
+  "author": "Aaron Spitalny",
+  "license": "MIT",
+  "dependencies": {
+    "kafka-node": "^2.4.1",
+    "nodemailer": "^4.6.3",
+    "nodemon": "^1.17.2"
+  }
+}
