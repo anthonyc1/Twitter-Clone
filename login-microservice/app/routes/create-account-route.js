@@ -26,9 +26,9 @@ router.post('/verify', async function(req, res) {
         if (req.body.key == "abracadabra") {
             verified = await service.activateAccount(req.body.email);
         } else {
-            verified = await service.activateAccountByKey(req.body.key);
+            verified = await service.activateAccountByKey((req.body.key).substring(10));
         }
-        if (verified) {
+        if (verified != 0) {
             res.send(JSON.stringify({
                 "status": 'OK'
             }));
@@ -160,7 +160,7 @@ async function verifyInput(body, log) {
         }
     }
     if (flag == true) {
-        if (body.password !== body.confirmPassword) {
+        if (body.password !== body.password) {
             flag = false;
             log.type = "error";
             log.code = 1;

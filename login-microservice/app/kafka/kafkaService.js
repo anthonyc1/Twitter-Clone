@@ -1,5 +1,5 @@
 var kafka = require('kafka-node');
-var configFile = require('../../config.json');
+var configFile = require('../../config_vars.json');
 var Producer = kafka.Producer;
 
 function sendEmail(email) {
@@ -18,7 +18,6 @@ function sendEmail(email) {
     producer.on('error', function(err) {
         console.log(err)
     });
-
 }
 
 module.exports = {

@@ -14,7 +14,7 @@ router.use(bodyParser.urlencoded({
 let configVars = fs.readFileSync('./config_vars.json');
 let obj = JSON.parse(configVars);
 var secret = obj.secret;
-var validContentTypes = [null, 'retweet','reply'];
+var validContentTypes = [undefined, 'retweet','reply'];
 
 router.post('/additem', function(req, res){
 	var userJWT = jwt.verify(req.cookies.token, secret, function(err, decoded){

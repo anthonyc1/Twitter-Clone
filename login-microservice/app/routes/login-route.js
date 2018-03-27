@@ -23,16 +23,16 @@ router.get(['/pirates', '/', 'posts'], async function(req, res) {
             var userJWTPayload = jwt.verify(req.cookies.token, configFile.secret)
             let verify = await service.getUser(userJWTPayload.username);
             if (!verify) {
-                   res.render('index-tmpl', {
+                res.render('index-tmpl', {
+                    pageID: 'login',
+                    title: "pirates"
+                });
+            } else {
+                if (verify.active == false) {
+                    res.render('index-tmpl', {
                         pageID: 'login',
                         title: "pirates"
                     });
-            } else {
-                if (verify.active == false) {
-                       res.render('index-tmpl', {
-                            pageID: 'login',
-                            title: "pirates"
-                        });
                 } else {
                     res.render('posts-tmpl', {
                         pageID: 'posts',
@@ -46,9 +46,9 @@ router.get(['/pirates', '/', 'posts'], async function(req, res) {
     } catch (err) {
         console.log(err)
         res.render('index-tmpl', {
-             pageID: 'signIn',
-             title: "pirates"
-         });
+            pageID: 'signIn',
+            title: "pirates"
+        });
     }
 });
 
@@ -72,7 +72,7 @@ router.post('/login', async function(req, res) {
                     "errorMessage": "incorrect username"
                 }));
             } else {
-                if (!(bcrypt.compareSync(req.body.password, login.password))){
+                if (!(bcrypt.compareSync(req.body.password, login.password))) {
                     res.send(JSON.stringify({
                         "status": 'error',
                         "error": "password",
@@ -108,6 +108,13 @@ router.post('/login', async function(req, res) {
             "errro": err
         });
     }
+});
+
+router.post('/logout', async function(req, res) {
+    res.clearCookie('token');
+    res.send(JSON.stringify({
+        "status": 'OK'
+    }));
 });
 
 router.get('/logout', async function(req, res) {

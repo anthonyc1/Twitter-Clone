@@ -2,7 +2,7 @@ var express = require('express');
 var Sequelize = require("sequelize");
 var cookieParser = require('cookie-parser');
 var reload = require('reload');
-var configFile = require('../config.json');
+var configFile = require('../config_vars.json');
 var userService = require('./mysql/services/userService');
 
 var app = module.exports = express();

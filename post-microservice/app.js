@@ -1,9 +1,11 @@
 var express = require('express'),
  mongoose = require('mongoose'),
- reload = require('reload');
+ reload = require('reload'),
+ cookieParser = require('cookie-parser');
 
 var app = express();
 app.set('port', process.env.PORT || 3000);
+app.use(cookieParser())
 
 // Routes
 app.use(require('./routes/add-item-route'));
