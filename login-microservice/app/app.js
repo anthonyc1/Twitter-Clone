@@ -5,7 +5,7 @@ var reload = require('reload');
 var configFile = require('../config_vars.json');
 var userService = require('./mysql/services/userService');
 
-var app = module.exports = express();
+var app = express();
 app.use(cookieParser())
 app.use(express.static('app/public'));
 app.set('port', process.env.PORT || 3000);
@@ -33,9 +33,6 @@ sequelize.authenticate().then(()=>{
     console.log(err);
     process.exit(1);
 });
-app.set('sequelize', sequelize);
-
-
 
 var server = app.listen(app.get('port'), function() {
     console.log("listening on port " + app.get('port'));

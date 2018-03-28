@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var itemModel = require('../models/AddItem.js');
+var itemModel = require('../models/Item.js');
 
 
 async function createItem(data) {

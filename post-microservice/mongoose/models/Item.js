@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-const AddItemSchema = mongoose.Schema({
+const ItemSchema = mongoose.Schema({
     username: {type: String, required: true, lowercase: true},
     content: {type: String, required: true},
     childType: {type: String},
@@ -9,4 +9,4 @@ const AddItemSchema = mongoose.Schema({
     timestamp: {type: String, required: true}
 });
 
-module.exports = mongoose.model('Item', AddItemSchema);
+module.exports = mongoose.model('Item', ItemSchema);

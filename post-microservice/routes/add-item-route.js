@@ -3,7 +3,7 @@ var express = require('express'),
  jwt = require('jsonwebtoken'),
  fs = require('fs'),
  mongoose = require('mongoose'),
- mongoose_item = require('../mongoose/services/addItemService.js');
+ mongoose_item = require('../mongoose/services/itemService.js');
 
 var router = express.Router();
 router.use(bodyParser.json());
