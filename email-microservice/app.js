@@ -1,6 +1,6 @@
 var nodemailer = require('nodemailer');
 var kafka = require('kafka-node');
-var configFile = require('../config_vars.json');
+var configFile = require('./config_vars.json');
 var Consumer = kafka.Consumer;
 var transporter = nodemailer.createTransport('smtps://' + configFile.email + ':' + configFile.password + '@smtp.gmail.com');
 var consumer = new Consumer(
@@ -35,5 +35,5 @@ consumer.on('message', function(message) {
 });
 
 consumer.on('error', function(error) {
-    console.log(message);
+    console.log(error);
 });

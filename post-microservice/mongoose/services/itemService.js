@@ -1,4 +1,3 @@
-var mongoose = require('mongoose');
 var itemModel = require('../models/Item.js');
 
 
