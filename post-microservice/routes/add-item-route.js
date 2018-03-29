@@ -1,9 +1,7 @@
 var express = require('express'),
  bodyParser = require('body-parser'),
  jwt = require('jsonwebtoken'),
- fs = require('fs'),
- mongoose = require('mongoose'),
- mongoose_item = require('../mongoose/services/addItemService.js');
+ mongoose_item = require('../mongoose/services/itemService.js');
 
 var router = express.Router();
 router.use(bodyParser.json());
@@ -11,13 +9,11 @@ router.use(bodyParser.urlencoded({
     extended: false
 }));
 
-let configVars = fs.readFileSync('./config_vars.json');
-let obj = JSON.parse(configVars);
-var secret = obj.secret;
-var validContentTypes = [null, 'retweet','reply'];
+var validContentTypes = [undefined, 'retweet','reply'];
 
 router.post('/additem', function(req, res){
-	var userJWT = jwt.verify(req.cookies.token, secret, function(err, decoded){
+    var configVars = req.app.get('configVars');
+	var userJWT = jwt.verify(req.cookies.token, configVars.secret, function(err, decoded){
 		if (err){
 			res.send({status: "error", error: "invalid session"});
 		} else {

@@ -1,6 +1,6 @@
 var Models = require('../models/index');
 
-var client = null;
+var client_service = null;
 var models = null;
 
 async function createUser(user) {
@@ -43,9 +43,9 @@ async function activateAccountByKey(key) {
     });
 }
 
-module.exports = (_client) => {
-    models = Models(_client);
-    client = _client;
+module.exports = (client) => {
+    models = Models(client);
+    client_service = client;
     return {
         createUser,
         getUser,
