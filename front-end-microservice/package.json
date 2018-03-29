@@ -1,0 +1,16 @@
+{
+  "name": "front-end-microservice",
+  "version": "1.0.0",
+  "description": "The front-end-microservice will serve all front-end files to the user",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon"
+  },
+  "author": "Aaron Spitalny",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.12"
+  }
+}
