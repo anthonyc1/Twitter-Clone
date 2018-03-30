@@ -1,5 +1,6 @@
 var express = require('express'),
  bodyParser = require('body-parser'),
+ mongoose = require('mongoose'),
  mongoose_item = require('../mongoose/services/itemService.js');
 
 var router = express.Router();

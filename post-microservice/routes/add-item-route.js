@@ -1,6 +1,7 @@
 var express = require('express'),
  bodyParser = require('body-parser'),
  jwt = require('jsonwebtoken'),
+ mongoose = require('mongoose'),
  mongoose_item = require('../mongoose/services/itemService.js');
 
 var router = express.Router();
