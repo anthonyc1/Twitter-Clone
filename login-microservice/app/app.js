@@ -1,7 +1,6 @@
 var express = require('express');
 var Sequelize = require("sequelize");
 var cookieParser = require('cookie-parser');
-var reload = require('reload');
 var configFile = require('../config_vars.json');
 var userService = require('./mysql/services/userService');
 
@@ -10,10 +9,6 @@ app.use(cookieParser())
 app.use(express.static('app/public'));
 app.set('port', process.env.PORT || 3000);
 app.set('appConfig', configFile);
-app.use(require('./routes/create-account-route'));
-app.use(require('./routes/login-route'));
-app.set('view engine', 'ejs');
-app.set('views', 'app/views');
 
 //mysql database
 var sequelize = new Sequelize({
@@ -37,5 +32,3 @@ sequelize.authenticate().then(()=>{
 var server = app.listen(app.get('port'), function() {
     console.log("listening on port " + app.get('port'));
 });
-
-reload(app);
