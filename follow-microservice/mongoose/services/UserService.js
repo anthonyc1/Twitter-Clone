@@ -30,30 +30,30 @@ async function getFollowing(username, limit) {
     }
 }
 
-// Note: username = user to follow, current = current user
-async function follow(username, current){
+// Note: username = user to follow, current = current user, follow = boolean
+async function follow(username, current, follow){
     var user = userModel.findOne({username: username});
-    var set = new Set(user.followers);
-    var hasUser = set.has(username);        
-    if (hasUser){ //perform unfollow
-        return userModel.update({
+    // var set = new Set(user.followers);
+    // var hasUser = set.has(username);        
+    if (!follow){ //perform unfollow
+        return userModel.update(
             {"username" : username},
             {"$filter" : {
-                input: followers,
+                input: user.followers,
                 as: "user",
-                cond: {"$$user" !== current}
+                cond: {"$$user" : {$ne: current}}
             }}, function (err) {
                 if (err) throw err;
             }
-        })
+        )
     } else { //perform follow
-        return userModel.update({
+        return userModel.update(
             {"username" : username},
             {"$push": {"followers" : current}},
             function(err){
                 if (err) throw err;
             }
-        })
+        )
     }
 }
 

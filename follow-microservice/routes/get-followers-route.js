@@ -11,7 +11,7 @@ router.use(bodyParser.urlencoded({
 
 router.get('/user/:username/followers', function(req, res){
 	username = req.params.username;
-	limit = req.body.limit;
+	limit = req.params.limit;
 	if (limit && (limit > 100 || limit < 0)){
 		res.send({status: "error", error: "limit is out of range"});
 	}
