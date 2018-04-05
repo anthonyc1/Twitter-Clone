@@ -28,7 +28,6 @@ async function deleteItem(id) {
 async function searchItems(data) {
     var q = (data.q) ? {$search: data.q} : undefined;
     var following = (data.following) ? {$in: data.following} : undefined;
-    console.log(following)
     query = {
         username: following,
         $text: q,

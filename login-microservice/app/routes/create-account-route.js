@@ -97,7 +97,9 @@ router.post('/adduser', async function(req, res) {
                     email: req.body.email,
                     key: created[0].dataValues.user_id
                 }));
-                res.sendStatus(200);
+                res.send(JSON.stringify({
+                    "status": "OK"
+                }));
             } else {
                 //user with unsername already exists in the database
                 res.send(JSON.stringify({

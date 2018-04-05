@@ -21,7 +21,6 @@ router.post('/search', async function(req, res) {
             if (decoded) {
                 var user = await mongoose_user.getFollowing(decoded.username, 100);
                 following = user.following;
-                console.log(following)
             } else {
                 flag = false;
             }
@@ -33,8 +32,7 @@ router.post('/search', async function(req, res) {
     if (flag) {
         var timestamp = (req.body.timestamp) ? req.body.timestamp : new Date().getTime();
         var limit = (req.body.limit) ? req.body.limit : 25;
-        console.log(timestamp + " " + limit + " " + req.body.q + " " + req.body.username + " " + req.body.following)
-        following.push(req.body.username);
+        following = (req.body.username) ? following.concat([req.body.username]): (following.length == 0) ? undefined : following;
         var items = mongoose_item.searchItems({
             timestamp: timestamp,
             limit: limit,
