@@ -3,6 +3,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 var kafka = require('../kafka/kafkaService');
 var bcrypt = require('bcrypt');
+var userService = require('../mongoose/services/userService.js');
 const saltRounds = 10;
 
 router.use(bodyParser.json());
@@ -78,15 +79,19 @@ router.post('/adduser', async function(req, res) {
                 "errorMessage": log.longMessage
             }));
         } else {
-            var salt = bcrypt.genSaltSync(saltRounds);
-            var hash = bcrypt.hashSync(req.body.password, salt);
+            //removed hash to increase speed
+            //var salt = bcrypt.genSaltSync(saltRounds);
+            //var hash = bcrypt.hashSync(req.body.password, salt);
             let created = await service.createUser({
                 username: req.body.username,
                 email: req.body.email,
-                password: hash
+                password: req.body.password
             });
             if (created[1]) {
-                console.log(created[0].dataValues.user_id);
+                let createdMongo = userService.createUser({
+                    email: req.body.email,
+                    username: req.body.username
+                });
                 kafka.sendEmail(JSON.stringify({
                     username: req.body.username,
                     email: req.body.email,

@@ -15,7 +15,7 @@ app.use(require('./routes/get-following-route'));
 app.use(require('./routes/follow-route'));
 
 // Connect to MongoDB
-mongoose.connect('mongodb://'+ configVars.mongodb_host +':'+ configVars.mongodb_port+ '/' + configVars.mongodb_database);
+mongoose.connect('mongodb://'+ configVars.mongodb_host +':'+ configVars.mongodb_port+ '/' + configVars.mongodb_db);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
