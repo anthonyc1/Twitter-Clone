@@ -17,7 +17,7 @@ consumer.on('message', function(message) {
     try {
         var data = JSON.parse(message.value);
         var mailOptions = {
-            from: 'Pirates <cse305project@gmail.com>', // sender address
+            from: 'CSE-356 <cse305project@gmail.com>', // sender address
             to: data.email, // list of receivers
             subject: 'Verification', // Subject line
             text: 'validation key: <Ki27eSCM8B' + data.key + '>'

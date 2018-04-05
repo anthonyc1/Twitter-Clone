@@ -10,15 +10,6 @@ router.use(bodyParser.urlencoded({
     extended: false
 }));
 
-
-router.get('/createAccount', function(req, res) {
-    res.render('index-tmpl', {
-        pageID: 'createAccount',
-        title: "Pirates"
-
-    });
-});
-
 router.post('/verify', async function(req, res) {
     var service = req.app.get('userService');
     var verified;

@@ -1,0 +1,33 @@
+{
+  "name": "front-end-microservice",
+  "version": "1.0.0",
+  "description": "The front-end-microservice will serve all front-end files to the user",
+  "main": "app/app.js",
+  "scripts": {
+    "start": "nodemon -e css,js,json,ejs --watch app",
+    "dev": "webpack -wd"
+  },
+  "author": "Aaron Spitalny",
+  "license": "MIT",
+  "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.2.0",
+    "material-ui": "^0.20.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-icons": "^2.2.7",
+    "react-router-dom": "^4.2.2",
+    "react-tap-event-plugin": "^3.0.2",
+    "reload": "^2.2.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "nodemon": "^1.14.12",
+    "webpack": "^3.11.0"
+  }
+}

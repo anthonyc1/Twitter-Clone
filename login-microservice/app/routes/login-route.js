@@ -10,47 +10,6 @@ router.use(bodyParser.urlencoded({
     extended: false
 }));
 
-router.get(['/pirates', '/', 'posts'], async function(req, res) {
-    var configFile = req.app.get('appConfig');
-    var service = req.app.get('userService');
-    try {
-        if (req.cookies == undefined || Object.keys(req.cookies).length === 0) {
-            res.render('index-tmpl', {
-                pageID: 'login',
-                title: "pirates"
-            });
-        } else {
-            var userJWTPayload = jwt.verify(req.cookies.token, configFile.secret)
-            let verify = await service.getUser(userJWTPayload.username);
-            if (!verify) {
-                res.render('index-tmpl', {
-                    pageID: 'login',
-                    title: "pirates"
-                });
-            } else {
-                if (verify.active == false) {
-                    res.render('index-tmpl', {
-                        pageID: 'login',
-                        title: "pirates"
-                    });
-                } else {
-                    res.render('posts-tmpl', {
-                        pageID: 'posts',
-                        name: userJWTPayload.username,
-                        date: new Date(),
-                        title: "pirates"
-                    });
-                }
-            }
-        }
-    } catch (err) {
-        console.log(err)
-        res.render('index-tmpl', {
-            pageID: 'signIn',
-            title: "pirates"
-        });
-    }
-});
 
 router.post('/login', async function(req, res) {
     var configFile = req.app.get('appConfig');
