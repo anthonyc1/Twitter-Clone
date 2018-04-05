@@ -31,7 +31,8 @@ router.post('/login', async function(req, res) {
                     "errorMessage": "incorrect username"
                 }));
             } else {
-                if (!(bcrypt.compareSync(req.body.password, login.password))) {
+                //if (!(bcrypt.compareSync(req.body.password, login.password))) {
+                if(req.body.password == login.password){
                     res.send(JSON.stringify({
                         "status": 'error',
                         "error": "password",
