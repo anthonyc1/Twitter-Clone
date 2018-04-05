@@ -1,7 +1,9 @@
 var express = require('express'),
- bodyParser = require('body-parser'),
- mongoose = require('mongoose'),
- mongoose_user = require('../mongoose/services/UserService.js');
+    bodyParser = require('body-parser'),
+    mongoose = require('mongoose'),
+    mongoose_user = require('../mongoose/services/UserService.js');
+var jwt = require('jsonwebtoken');
+
 
 var router = express.Router();
 router.use(bodyParser.json());
@@ -9,32 +11,51 @@ router.use(bodyParser.urlencoded({
     extended: false
 }));
 
-router.post('/follow', function(req, res){
-	// var configVars = req.app.get('configVars');
-	// var userJWT = jwt.verify(req.cookies.token, configVars.secret, function(err, decoded){
-	// 	if (err){
-	// 		res.send({status: "error", error: "invalid session"});
-	// 	} else {
-			username = req.body.username;
-			//current = decoded.username;
-			current = req.body.current;
-			if (req.body.follow == undefined)
-				follow = true;
-			else
-				follow = req.body.follow
-			var user = mongoose_user.follow(username, current, follow);
-			user.then(function(item){
-				console.log(item);
-				if (item){
-					res.send({status: "OK"});
-				} else {
-					res.send({status: "error", error: "no user found"});
-				}
-			}).catch(err => {
-				console.log(err);
-			})
-	// 	}
-	// })
+router.post('/follow', async function(req, res) {
+    var configVars = req.app.get('configVars');
+    try {
+        var decoded = await jwt.verify((req.cookies.token), configVars.secret);
+        if (decoded) {
+            var followed = req.body.username;
+            var follower = decoded.username;
+            if (followed == follower) {
+                res.send({
+                    status: "error",
+                    error: "can't follow yourself"
+                });
+            } else {
+                let response = await mongoose_user.updateFollower({
+                    followed: followed,
+                    follower: follower,
+                    follow: req.body.follow
+                });
+                if (response.n == 1) {
+                    mongoose_user.updateFollowing({
+                        followed: followed,
+                        follower: follower,
+                        follow: req.body.follow
+                    });
+                    res.send({
+                        status: "OK"
+                    });
+                } else {
+                    res.send({
+                        status: "error",
+                        error: "user does not exist"
+                    });
+                }
+            }
+        } else {
+            res.send({
+                status: "error"
+            });
+        }
+    } catch (error) {
+        res.send({
+            status: "error",
+            error: error
+        });
+    }
 });
 
 module.exports = router;

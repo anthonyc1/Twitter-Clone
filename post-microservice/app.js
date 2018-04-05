@@ -14,7 +14,7 @@ app.use(require('./routes/delete-item-route'));
 app.use(require('./routes/search-route'));
 
 // Connect to MongoDB
-mongoose.connect('mongodb://'+ configVars.mongodb_host +':'+ configVars.mongodb_port+ '/' + configVars.mongodb_collection);
+mongoose.connect('mongodb://'+ configVars.mongodb_host +':'+ configVars.mongodb_port+ '/' + configVars.mongodb_db);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
