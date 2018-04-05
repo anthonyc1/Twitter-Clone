@@ -6,6 +6,7 @@ body {
     margin: 0;
 }
 
-input {
-  outline: none;
+input[type="text"], input {
+outline: none;
+box-shadow:none !important;
 }
