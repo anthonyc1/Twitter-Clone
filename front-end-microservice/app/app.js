@@ -6,7 +6,7 @@ var configFile = require('../config_vars.json');
 var app = express();
 app.use(cookieParser())
 app.use(express.static('app/public'));
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3005);
 app.set('appConfig', configFile);
 app.use(require('./routes/index-route'));
 app.set('view engine', 'ejs');

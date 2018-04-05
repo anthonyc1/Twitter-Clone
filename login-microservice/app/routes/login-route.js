@@ -32,7 +32,7 @@ router.post('/login', async function(req, res) {
                 }));
             } else {
                 //if (!(bcrypt.compareSync(req.body.password, login.password))) {
-                if(req.body.password == login.password){
+                if(req.body.password != login.password){
                     res.send(JSON.stringify({
                         "status": 'error',
                         "error": "password",
