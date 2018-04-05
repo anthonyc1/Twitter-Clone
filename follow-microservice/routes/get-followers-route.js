@@ -15,7 +15,7 @@ router.get('/user/:username/followers', function(req, res){
 	if (limit && (limit > 100 || limit < 0)){
 		res.send({status: "error", error: "limit is out of range"});
 	}
-	var user = mongoose_user.getUser(username, limit);
+	var user = mongoose_user.getFollowers(username, limit);
 	user.then(function(item){
 		console.log(item);
 		if (item){

@@ -11,19 +11,11 @@ router.use(bodyParser.urlencoded({
 
 router.post('/follow', function(req, res){
 	username = req.params.username;
-	var user = mongoose_user.getUser(username);
+	current = // get from jwt
+	var user = mongoose_user.follow(username, current);
 	user.then(function(item){
 		console.log(item);
 		if (item){
-			var arr = item.followers;
-			var set = new Set(arr);
-			var hasUser = set.has(username);
-			if (hasUser){
-				var index = arr.indexOf(username);
-				arr
-			} else {
-
-			}
 			res.send({status: "OK";})
 		}
 		 else {

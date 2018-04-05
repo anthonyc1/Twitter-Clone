@@ -11,7 +11,11 @@ router.use(bodyParser.urlencoded({
 
 router.get('/user/:username/following', function(req, res){
 	username = req.params.username;
-	var user = mongoose_user.getUser(username);
+	limit = req.body.limit;
+	if (limit && (limit > 100 || limit < 0)){
+		res.send({status: "error", error: "limit is out of range"});
+	}
+	var user = mongoose_user.getFollowing(username, limit);
 	user.then(function(item){
 		console.log(item);
 		if (item){
