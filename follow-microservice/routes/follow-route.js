@@ -10,19 +10,26 @@ router.use(bodyParser.urlencoded({
 }));
 
 router.post('/follow', function(req, res){
-	username = req.params.username;
-	current = // get from jwt
-	var user = mongoose_user.follow(username, current);
-	user.then(function(item){
-		console.log(item);
-		if (item){
-			res.send({status: "OK";})
+	var configVars = req.app.get('configVars');
+	var userJWT = jwt.verify(req.cookies.token, configVars.secret, function(err, decoded){
+		if (err){
+			res.send({status: "error", error: "invalid session"});
+		} else {
+			username = req.params.username;
+			current = decoded.username;
+			var user = mongoose_user.follow(username, current);
+			user.then(function(item){
+				console.log(item);
+				if (item){
+					res.send({status: "OK";})
+				}
+				 else {
+					res.send({status: "error", error: "no user found"});
+				}
+			}).catch(err => {
+				console.log(err);
+			})
 		}
-		 else {
-			res.send({status: "error", error: "no user found"});
-		}
-	}).catch(err => {
-		console.log(err);
 	})
 });
 
