@@ -18,7 +18,7 @@ router.post('/item/:id/like', async function(req, res){
         if (decoded) {
         	var user = decoded.username;
         	var id = req.params.id;
-			var like = (req.body.like) ? req.body.like : true;
+			var like = req.body.like;
 			var item = mongoose_item.getItem(mongoose.Types.ObjectId(id));
 			item.then(function(result){
 				if (result){

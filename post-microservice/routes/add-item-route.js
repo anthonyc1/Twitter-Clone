@@ -22,7 +22,7 @@ router.post('/additem', async function(req, res){
 				else {
 					var parent = (req.body.parent) ? req.body.parent : "";
 					var media = (req.body.media) ? req.body.media : [];
-					var item = mongoose_item.createItem({
+					mongoose_item.createItem({
 						username: decoded.username,
 						content: req.body.content,
 						childType: req.body.childType,
@@ -32,8 +32,7 @@ router.post('/additem', async function(req, res){
 						parent: parent,
 						media: media,
 						likedby: []
-					})
-					item.then(function(id){
+					}).then(function(id){
 						res.send({status: "OK", id: id});
 					});
 				}

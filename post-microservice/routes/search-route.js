@@ -13,14 +13,15 @@ router.use(bodyParser.urlencoded({
 
 router.post('/search', async function(req, res) {
     var configVars = req.app.get('configVars');
-    var following = [];
+    var usersfollowed = [];
     var flag = true;
-    if (req.body.following != false) {
+    var following = (!req.body.following) ? req.body.following : true;
+    if (following != false) {
         try {
             var decoded = await jwt.verify((req.cookies.token), configVars.secret);
             if (decoded) {
                 var user = await mongoose_user.getFollowing(decoded.username, 100);
-                following = user.following;
+                usersfollowed = user.following;
             } else {
                 flag = false;
             }
@@ -32,12 +33,21 @@ router.post('/search', async function(req, res) {
     if (flag) {
         var timestamp = (req.body.timestamp) ? req.body.timestamp : new Date().getTime();
         var limit = (req.body.limit) ? req.body.limit : 25;
-        following = (req.body.username) ? following.concat([req.body.username]): (following.length == 0) ? undefined : following;
+        usersfollowed = (req.body.username) ? usersfollowed.concat([req.body.username]): (usersfollowed.length == 0) ? undefined : usersfollowed;
+        var rank = (req.body.rank) ? req.body.rank : "interest";
+        var parent = req.body.parent;
+        var replies = (req.body.replies != undefined) ? req.body.replies : true;
+        var hasMedia = (req.body.hasMedia != undefined) ? req.body.hasMedia : false ;
         var items = mongoose_item.searchItems({
             timestamp: timestamp,
             limit: limit,
             q: req.body.q,
-            following: following
+            following: following,
+            usersfollowed: usersfollowed,
+            rank: rank,
+            parent: parent,
+            replies: replies,
+            hasMedia: hasMedia
         });
         items.then(function(items) {
             res.send({

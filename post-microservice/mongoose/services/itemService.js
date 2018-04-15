@@ -26,18 +26,37 @@ async function deleteItem(id) {
 
 async function searchItems(data) {
     var q = (data.q) ? {$search: data.q} : undefined;
-    var following = (data.following) ? {$in: data.following} : undefined;
-    query = {
-        username: following,
-        $text: q,
-        timestamp: {'$lte': data.timestamp}
+    var following = (data.following) ? {$in: data.usersfollowed} : undefined;
+    var parent = (data.parent != undefined) ? {$eq: data.parent} : undefined;
+    var replies = (data.replies) ? undefined : {$not: {$ne: "reply"}};
+    var hasMedia = data.hasMedia;
+    if (data.rank == "time"){
+        query = {
+            username: following,
+            $text: q,
+            timestamp: {'$lte': data.timestamp},
+            parent: parent,
+            childType: replies,
+            'media.0': {$exists: hasMedia}
+        }
+        return itemModel.find(JSON.parse(JSON.stringify(query))).limit(data.limit).sort({timestamp: -1});
+    } else {
+        query = {
+            username: following,
+            $text: q,
+            timestamp: {'$lte': data.timestamp},
+            parent: parent,
+            childType: replies,
+            'media.0': {$exists: hasMedia}
+        }
+        return itemModel.find(JSON.parse(JSON.stringify(query))).limit(data.limit).sort({likes: -1, retweeted: -1});
     }
-    return itemModel.find(JSON.parse(JSON.stringify(query))).limit(data.limit);
+    
 }
 
 async function likeItem(data){
     if (data.item.likedby.includes(data.user)){
-        if (like){
+        if (data.like){
             return "error"; //cannot like an item you already liked
         } else {
             return itemModel.update({
@@ -52,7 +71,7 @@ async function likeItem(data){
             })
         }
     } else {
-        if (like){
+        if (data.like){
             return itemModel.update({
                 _id: data.id
             }, {
