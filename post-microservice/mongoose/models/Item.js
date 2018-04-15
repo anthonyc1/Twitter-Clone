@@ -6,7 +6,10 @@ const ItemSchema = mongoose.Schema({
     childType: {type: String},
     likes: {type: Number, required: true},
     retweeted: {type: Number, required: true},
-    timestamp: {type: String, required: true}
+    timestamp: {type: String, required: true},
+    parent: {type: String},
+    media: {type: Array, "default":[]},
+    likedby: {type: Array, "default":[]}
 });
 
 module.exports = mongoose.model('Item', ItemSchema);

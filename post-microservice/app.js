@@ -12,6 +12,7 @@ app.use(require('./routes/add-item-route'));
 app.use(require('./routes/get-item-route'));
 app.use(require('./routes/delete-item-route'));
 app.use(require('./routes/search-route'));
+app.use(require('./routes/like-item-route'));
 
 // Connect to MongoDB
 mongoose.connect('mongodb://'+ configVars.mongodb_host +':'+ configVars.mongodb_port+ '/' + configVars.mongodb_db);

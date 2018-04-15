@@ -1,6 +1,5 @@
 var itemModel = require('../models/Item.js');
 
-
 async function createItem(data) {
     var item = new itemModel(data);
     item.save(function(err){
@@ -36,11 +35,46 @@ async function searchItems(data) {
     return itemModel.find(JSON.parse(JSON.stringify(query))).limit(data.limit);
 }
 
+async function likeItem(data){
+    if (data.item.likedby.includes(data.user)){
+        if (like){
+            return "error"; //cannot like an item you already liked
+        } else {
+            return itemModel.update({
+                _id: data.id
+            }, {
+                $pull: {
+                    likedby: data.user
+                },
+                $inc: {
+                    likes: -1
+                }
+            })
+        }
+    } else {
+        if (like){
+            return itemModel.update({
+                _id: data.id
+            }, {
+                $addToSet: {
+                    likedby: data.user
+                },
+                $inc: {
+                    likes: 1
+                }
+            })
+        } else {
+            return "error"; //cannot unliked an item you didn't like
+        }
+    }
+}
+
 
 module.exports = {
     createItem,
     getItem,
     deleteItem,
     getAll,
-    searchItems
+    searchItems,
+    likeItem
 }

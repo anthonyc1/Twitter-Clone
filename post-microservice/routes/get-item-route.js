@@ -23,7 +23,10 @@ router.get('/item/:id', function(req, res){
 				},
 				retweeted: item.retweeted,
 				content: item.content,
-				timestamp: item.timestamp
+				timestamp: item.timestamp,
+				childType: (item.childType) ? item.childType : null,
+				parent: (item.parent) ? item.parent : "",
+				media: item.media
 			}})
 		}
 		 else {
