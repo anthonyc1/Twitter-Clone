@@ -4,7 +4,7 @@ var express = require('express'),
  configVars = require('./config_vars');
 
 var app = express();
-app.set('port', process.env.PORT || 3004);
+app.set('port', process.env.PORT || 3003);
 app.use(cookieParser())
 app.set('configVars', configVars)
 // Routes

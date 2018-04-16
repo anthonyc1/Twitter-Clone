@@ -29,7 +29,7 @@ async function searchItems(data) {
     var following = (data.following) ? {$in: data.usersfollowed} : undefined;
     var parent = (data.parent != undefined) ? {$eq: data.parent} : undefined;
     var replies = (data.replies) ? undefined : {$not: {$ne: "reply"}};
-    var hasMedia = data.hasMedia;
+    var hasMedia = (data.hasMedia) ? {$exists: data.hasMedia} : undefined;
     if (data.rank == "time"){
         query = {
             username: following,
@@ -37,7 +37,7 @@ async function searchItems(data) {
             timestamp: {'$lte': data.timestamp},
             parent: parent,
             childType: replies,
-            'media.0': {$exists: hasMedia}
+            'media.0': hasMedia
         }
         return itemModel.find(JSON.parse(JSON.stringify(query))).limit(data.limit).sort({timestamp: -1});
     } else {
@@ -47,7 +47,7 @@ async function searchItems(data) {
             timestamp: {'$lte': data.timestamp},
             parent: parent,
             childType: replies,
-            'media.0': {$exists: hasMedia}
+            'media.0': hasMedia
         }
         return itemModel.find(JSON.parse(JSON.stringify(query))).limit(data.limit).sort({likes: -1, retweeted: -1});
     }
