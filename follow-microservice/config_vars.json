@@ -1,0 +1,5 @@
+{
+	"mongodb_host": "130.245.168.164",
+	"mongodb_port": "27017",
+	"mongodb_db": "users"
+}
