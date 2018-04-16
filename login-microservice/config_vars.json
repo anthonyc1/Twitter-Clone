@@ -1,0 +1,15 @@
+{
+    "mysql_host": "130.245.170.61",
+    "mysql_port": "3306",
+    "mysql_username": "panda",
+    "mysql_password": "root",
+    "mysql_database": "users",
+    "mysql_dialect": "mysql",
+    "kafka_host": "130.245.170.73",
+    "kafka_port": "9092",
+    "kafka_email_topic": "email-queue",
+    "secret": "sacagawea",
+    "mongodb_host": "130.245.168.164",
+    "mongodb_port": "27017",
+    "mongodb_db": "twitter"
+}
