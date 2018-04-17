@@ -1,9 +1,13 @@
 var express = require('express'),
     bodyParser = require('body-parser'),
+    Memcached = require('memcached'),
     mongoose = require('mongoose'),
     mongoose_item = require('../mongoose/services/itemService.js'),
     mongoose_user = require('../mongoose/services/userService.js');;
 var jwt = require('jsonwebtoken');
+
+var memcached = new Memcached('127.0.0.1:11211');
+var lifetime = 86400;
 
 var router = express.Router();
 router.use(bodyParser.json());

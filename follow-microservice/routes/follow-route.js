@@ -34,10 +34,11 @@ router.post('/follow', async function(req, res) {
                         followed: followed,
                         follower: follower,
                         follow: req.body.follow
-                    });
-                    res.send({
-                        status: "OK"
-                    });
+                    }).then(function(err){
+                        res.send({
+                            status: "OK"
+                        });
+                    })
                 } else {
                     res.send({
                         status: "error",
