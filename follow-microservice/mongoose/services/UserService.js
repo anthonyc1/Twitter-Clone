@@ -95,7 +95,6 @@ module.exports = {
     getAll,
     getFollowers,
     getFollowing,
-    follow,
     updateFollower,
     updateFollowing
 }
