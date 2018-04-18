@@ -3,8 +3,5 @@
 	"mongodb_host": "130.245.168.164",
 	"mongodb_port": "27017",
 	"mongodb_db": "twitter"
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> fad5f86ec6a521ab454704c9a41c250bd356d7a7
+
