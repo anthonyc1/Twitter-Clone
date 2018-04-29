@@ -1,0 +1,87 @@
+upstream users {
+    server 130.245.170.52:3000;
+    server 130.245.168.105:3000;
+    server 130.245.170.153:3000;
+}
+
+upstream posts {
+    server 130.245.170.52:3001;
+    server 130.245.168.105:3001;
+    server 130.245.170.153:3001;
+}
+
+upstream follow {
+    server 130.245.170.52:3002;
+    server 130.245.168.105:3002;
+    server 130.245.170.153:3002;
+}
+
+upstream media {
+    server 130.245.170.52:3003;
+    server 130.245.168.105:3003;
+    server 130.245.170.153:3003;
+}
+
+upstream frontend {
+    server 130.245.170.52:3005;
+    server 130.245.168.105:3005;
+    server 130.245.170.153:3005;
+}
+
+server {
+    listen 80 default;
+    location ~* /(additem|item/.+|search) {
+        proxy_pass http://posts;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        }
+        location = / {
+        proxy_pass http://frontend;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        }
+    location ~* /(css|js) {
+        proxy_pass http://frontend;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        }
+    location ~* /(adduser|login|logout|verify) {
+        proxy_pass http://users;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        }
+    location ~* /(follow|user/.+/followers|user/.+/followers|user/.+) {
+        proxy_pass http://follow;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        }
+    location ~* /(addmedia|media/.+) {
+        proxy_pass http://media;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        }
+ }
