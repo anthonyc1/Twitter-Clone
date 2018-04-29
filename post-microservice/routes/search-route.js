@@ -76,7 +76,7 @@ router.post('/search', async function(req, res) {
                     error: err
                 })
             })
-        }
+        }})
     } else {
         res.send({
             status: "error"

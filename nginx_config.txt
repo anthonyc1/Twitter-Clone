@@ -1,37 +1,41 @@
 upstream users {
-    zone   users 64k;
+    zone   users 640k;
     server 130.245.170.52:3000;
     server 130.245.168.105:3000 weight=2;
     server 130.245.170.153:3000;
     server 130.245.170.73:3000;
     server 130.245.170.61:3000;
+    server 130.245.168.110:3000;
 }
 
 upstream posts {
-    zone   posts 64k;
+    zone   posts 640k;
     server 130.245.170.52:3001;
-    server 130.245.168.105:3001 weight=2;
+    server 130.245.168.105:3001;
     server 130.245.170.153:3001;
     server 130.245.170.73:3001;
     server 130.245.170.61:3001;
+    server 130.245.168.110:3001;
 }
 
 upstream follow {
-    zone   follow 64k;
+    zone   follow 640k;
     server 130.245.170.52:3002;
     server 130.245.168.105:3002 weight=2;
     server 130.245.170.153:3002;
     server 130.245.170.73:3002;
     server 130.245.170.61:3002;
+    server 130.245.168.110:3002;
 }
 
 upstream media {
-    zone   media 64k;
+    zone   media 640k;
     server 130.245.170.52:3003;
-    server 130.245.168.105:3003 weight=2;
+    server 130.245.168.105:3003;
     server 130.245.170.153:3003;
     server 130.245.170.73:3003;
     server 130.245.170.61:3003;
+    server 130.245.168.110:3003;
 }
 
 upstream frontend {
@@ -49,7 +53,7 @@ server {
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
         }
-    location = / {
+        location = / {
         proxy_pass http://frontend;
         proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
         proxy_http_version 1.1;
@@ -57,8 +61,8 @@ server {
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
-    }
-    location ~* /(css|js) {
+        }
+  location ~* /(css|js) {
         proxy_pass http://frontend;
         proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
         proxy_http_version 1.1;
@@ -85,7 +89,7 @@ server {
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
         }
-    location ~* /(addmedia|media/.+) {
+   location ~* /(addmedia|media/.+) {
         proxy_pass http://media;
         proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
         proxy_http_version 1.1;
@@ -94,14 +98,17 @@ server {
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
         }
-    location /api {
+   location /api {
         api   write=on;
         allow 0.0.0.0;
+    access_log   off;
     }
     location = /dashboard.html {
         root   /usr/share/nginx/html;
+    access_log   off;
     }
     location /swagger-ui {
         root   /usr/share/nginx/html;
-    }
+        access_log   off;
+}
  }
