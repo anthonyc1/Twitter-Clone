@@ -5,7 +5,7 @@ var express = require('express'),
  mongoose_item = require('../mongoose/services/itemService.js');
 
 var memcached = new Memcached('130.245.170.73:11211');
-var lifetime = 600;
+var lifetime = 60;
 
 var router = express.Router();
 router.use(bodyParser.json());
