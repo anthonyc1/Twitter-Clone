@@ -7,7 +7,7 @@ var express = require('express'),
 var jwt = require('jsonwebtoken');
 
 var memcached = new Memcached('130.245.170.73:11211');
-var lifetime = 60;
+var lifetime = 600;
 
 var router = express.Router();
 router.use(bodyParser.json());
@@ -42,29 +42,41 @@ router.post('/search', async function(req, res) {
         var parent = req.body.parent;
         var replies = (req.body.replies != undefined) ? req.body.replies : true;
         var hasMedia = (req.body.hasMedia != undefined) ? req.body.hasMedia : false ;
-        var items = mongoose_item.searchItems({
-            timestamp: timestamp,
-            limit: limit,
-            q: req.body.q,
-            following: following,
-            usersfollowed: usersfollowed,
-            rank: rank,
-            parent: parent,
-            replies: replies,
-            hasMedia: hasMedia
-        });
-        items.then(function(items) {
-            res.send({
-                status: "OK",
-                items: items
+        var key = timestamp+limit+req.body.q+usersfollowed+rank+parent+replies+hasMedia;
+        memcached.get(key, function(err, result){
+        if (result != undefined){
+            console.log("get: " + result);
+            res.send(result);
+        } else {    
+            var items = mongoose_item.searchItems({
+                timestamp: timestamp,
+                limit: limit,
+                q: req.body.q,
+                following: following,
+                usersfollowed: usersfollowed,
+                rank: rank,
+                parent: parent,
+                replies: replies,
+                hasMedia: hasMedia
             });
-        }).catch(err => {
-            console.log(err);
-            res.send({
-                status: "error",
-                error: err
+            items.then(function(items) {
+                var myObj = {
+                    status: "OK",
+                    items: items
+                };
+                memcached.set(key, myObj, lifetime, function(err, result){
+                    if (err) throw err;
+                    console.log("set: " + result);
+                })
+                res.send(myObj);
+            }).catch(err => {
+                console.log(err);
+                res.send({
+                    status: "error",
+                    error: err
+                })
             })
-        })
+        }
     } else {
         res.send({
             status: "error"
