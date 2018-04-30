@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var kafka = require('../kafka/kafkaService');
-var bcrypt = require('bcrypt');
 var userService = require('../mongoose/services/userService.js');
 const saltRounds = 10;
 
