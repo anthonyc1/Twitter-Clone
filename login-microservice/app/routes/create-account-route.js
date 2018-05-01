@@ -109,15 +109,23 @@ router.post('/adduser', async function(req, res) {
             }
         }
     } catch (error) {
-        //user with email already exists in the database
-        if (error.errors[0] != undefined) {
-            res.send(JSON.stringify({
-                "status": "error",
-                "error": "email",
-                "errorMessage": "email already exists"
-            }));
-        } else {
-            //probably log this error
+        if(error != undefined){
+            //user with email already exists in the database
+            if (error.errors[0] != undefined) {
+                res.send(JSON.stringify({
+                    "status": "error",
+                    "error": "email",
+                    "errorMessage": "email already exists"
+                }));
+            } else {
+                //probably log this error
+                console.log(error);
+                res.send(JSON.stringify({
+                    "status": "error",
+                    "error": "Unable to create account"
+                }));
+            }
+        }else{
             console.log(error);
             res.send(JSON.stringify({
                 "status": "error",
