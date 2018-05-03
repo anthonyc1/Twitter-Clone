@@ -1,10 +1,13 @@
+var dash = require('appmetrics-dash');
+//dash.attach();
 var express = require('express');
 var Sequelize = require("sequelize");
 var cookieParser = require('cookie-parser');
 var configFile = require('../config_vars.json');
 var userService = require('./mysql/services/userService');
 var mongoose = require('mongoose');
-
+//var appmetrics = require('appmetrics');
+//var monitoring = appmetrics.monitor();
 var app = express();
 app.use(cookieParser())
 app.use(require('./routes/create-account-route'));
@@ -42,4 +45,7 @@ db.once('open', function() {
 
 var server = app.listen(app.get('port'), function() {
     console.log("listening on port " + app.get('port'));
+});
+dash.monitor({
+    server: server
 });
