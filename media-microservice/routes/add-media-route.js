@@ -30,9 +30,8 @@ router.post('/addmedia', upload.single('content'), async function(req, res){
 		    			name: file.originalname,
 		    			contentType: file.mimetype,
 		    			content: Buffer(content, 'base64')
-		    		}).then(function(id){
-		    			res.send({status: "OK", id: id});
 		    		})
+                    res.send({status: "OK", id: id});
 				}
 			})
     	} else {

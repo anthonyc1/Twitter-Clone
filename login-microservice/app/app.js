@@ -1,4 +1,4 @@
-var dash = require('appmetrics-dash');
+//var dash = require('appmetrics-dash');
 //dash.attach();
 var express = require('express');
 var Sequelize = require("sequelize");
@@ -46,6 +46,7 @@ db.once('open', function() {
 var server = app.listen(app.get('port'), function() {
     console.log("listening on port " + app.get('port'));
 });
-dash.monitor({
-    server: server
-});
+
+// dash.monitor({
+//     server: server
+// });
