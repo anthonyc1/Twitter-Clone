@@ -5,7 +5,7 @@ async function createItem(data) {
     item.save(function(err){
         if (err) return err;
     });
-    return item._id;
+    return item.id;
 }
 
 async function getAll() {
@@ -14,7 +14,7 @@ async function getAll() {
 
 async function getItem(id) {
     return itemModel.findOne({
-        _id: id
+        id: id
     });
 }
 
@@ -51,7 +51,7 @@ async function searchItems(data) {
         }
         return itemModel.find(JSON.parse(JSON.stringify(query))).limit(data.limit).sort({likes: -1, retweeted: -1});
     }
-    
+
 }
 
 async function likeItem(data){
@@ -60,7 +60,7 @@ async function likeItem(data){
             return "error"; //cannot like an item you already liked
         } else {
             return itemModel.update({
-                _id: data.id
+                id: data.id
             }, {
                 $pull: {
                     likedby: data.user
@@ -71,9 +71,11 @@ async function likeItem(data){
             })
         }
     } else {
+        console.log(data.like)
         if (data.like){
+            console.log(data.id)
             return itemModel.update({
-                _id: data.id
+                id: data.id
             }, {
                 $addToSet: {
                     likedby: data.user

@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
 const ItemSchema = mongoose.Schema({
+    id: {type: String, required: true, index:{unique: true}},
     username: {type: String, required: true, lowercase: true},
     content: {type: String, required: true},
     childType: {type: String},

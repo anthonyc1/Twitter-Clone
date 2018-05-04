@@ -18,22 +18,23 @@ router.post('/item/:id/like', async function(req, res){
         if (decoded) {
         	var user = decoded.username;
         	var id = req.params.id;
-			var like = req.body.like;
-			var item = mongoose_item.getItem(mongoose.Types.ObjectId(id));
+            var like;
+            if(req.body.like == undefined){
+                like = true;
+            }else{
+                like = req.body.like;
+            }
+			var item = mongoose_item.getItem(id);
 			item.then(function(result){
 				if (result){
 					mongoose_item.likeItem({
 						item: result,
 						user: user,
-						id: result._id,
+						id: result.id,
 						like: like
-					}).then(function(output){
-						if (output == "error"){
-							res.send({status: "error"});
-						} else {
-							res.send({status: "OK"})
-						}
-					})
+					});
+                    console.log(item)
+                    res.send({status: "OK"})
 				} else {
 					// no item found with that id
 					res.send({status: "error"});

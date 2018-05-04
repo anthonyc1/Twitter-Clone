@@ -3,7 +3,7 @@ var express = require('express'),
  mongoose = require('mongoose'),
  mongoose_item = require('../mongoose/services/itemService.js');
 var jwt = require('jsonwebtoken');
-
+var randomID = require("random-id");
 var router = express.Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({
@@ -20,9 +20,11 @@ router.post('/additem', async function(req, res){
 			if (req.body.content == null || !(new Set(validContentTypes).has(req.body.childType)))
 				res.send({status: "error", error: "unable to create user"});
 			else {
+                var id = randomID(24);
 				var parent = (req.body.parent) ? req.body.parent : "";
 				var media = (req.body.media) ? req.body.media : [];
 				mongoose_item.createItem({
+                    id: id,
 					username: decoded.username,
 					content: req.body.content,
 					childType: req.body.childType,
@@ -32,9 +34,15 @@ router.post('/additem', async function(req, res){
 					parent: parent,
 					media: media,
 					likedby: []
+<<<<<<< HEAD
+				});
+                console.log("hello")
+                res.send({status: "OK", id: id});
+=======
 				}).then(function(id){
 -					res.send({status: "OK", id: id});
  				});
+>>>>>>> 4f008f3f4ced1af2d29a6fbd39fb875ea346a46f
 			}
 		} else {
 			res.send({status: "error", error: "invalid session"});

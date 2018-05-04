@@ -6,6 +6,7 @@ var express = require('express'),
  request = require('request'),
  fs = require('fs'),
  mongoose_media = require('../mongoose/services/mediaService.js');
+var randomID = require("random-id");
 
 var router = express.Router();
 router.use(bodyParser.json());
@@ -15,7 +16,6 @@ router.use(bodyParser.urlencoded({
 
 router.post('/addmedia', upload.single('content'), async function(req, res){
 	var file = req.file;
-	console.log(file);
 	var configVars = req.app.get('configVars');
     try {
     	var decoded = await jwt.verify((req.cookies.token), configVars.secret);
@@ -25,7 +25,9 @@ router.post('/addmedia', upload.single('content'), async function(req, res){
 					throw error;
 				else {
 					var content = data.toString('base64');
+                    var id = randomID(24);
 					mongoose_media.createMedia({
+                        id: id,
 		    			username: decoded.username,
 		    			name: file.originalname,
 		    			contentType: file.mimetype,

@@ -5,7 +5,7 @@ async function createMedia(data) {
     media.save(function(err){
         if (err) return err;
     });
-    return media._id;
+    return media.id;
 }
 
 async function getAll() {
@@ -14,7 +14,7 @@ async function getAll() {
 
 async function getMedia(id) {
     return mediaModel.findOne({
-        _id: id
+        id: id
     });
 }
 

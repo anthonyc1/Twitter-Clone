@@ -17,14 +17,10 @@ router.get('/item/:id', async function(req, res){
 	let id = req.params.id;
 	var key = "item"+id;
 	var result = await getMemCache(key);
-	console.log("cache: " + result);
 	if (result != undefined){
-		console.log("cache: " + result);
 		res.send(result);
 	} else {
-		console.log(id);
 		var item = await mongoose_item.getItem(id);
-		console.log("mongo: " + item);
 		if (item){
 			var myObj = {status: "OK", item: {
 				id: id,
@@ -41,7 +37,6 @@ router.get('/item/:id', async function(req, res){
 				}};
 				memcached.set(key, myObj, lifetime, function(err, result){
 					if (err) throw err;
-					console.log("set: " + result);
 				});
 				res.send(myObj);
 		}else {
