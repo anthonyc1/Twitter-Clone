@@ -32,8 +32,9 @@ router.post('/additem', async function(req, res){
 					parent: parent,
 					media: media,
 					likedby: []
-				});
-                res.send({status: "OK", id: id});
+				}).then(function(id){
+-					res.send({status: "OK", id: id});
+ 				});
 			}
 		} else {
 			res.send({status: "error", error: "invalid session"});
