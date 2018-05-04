@@ -1,5 +1,5 @@
 upstream users {
-    zone   users 640k;
+    zone   users 2048k;
     server 130.245.170.52:3000;
     server 130.245.168.105:3000 weight=2;
     server 130.245.170.153:3000;
@@ -9,7 +9,7 @@ upstream users {
 }
 
 upstream posts {
-    zone   posts 640k;
+    zone   posts 2048k;
     server 130.245.170.52:3001;
     server 130.245.168.105:3001;
     server 130.245.170.153:3001;
@@ -19,7 +19,7 @@ upstream posts {
 }
 
 upstream follow {
-    zone   follow 640k;
+    zone   follow 2048k;
     server 130.245.170.52:3002;
     server 130.245.168.105:3002 weight=2;
     server 130.245.170.153:3002;
@@ -29,7 +29,7 @@ upstream follow {
 }
 
 upstream media {
-    zone   media 640k;
+    zone   media 2048k;
     server 130.245.170.52:3003;
     server 130.245.168.105:3003;
     server 130.245.170.153:3003;
@@ -98,17 +98,17 @@ server {
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
         }
-   location /api {
-        api   write=on;
-        allow 0.0.0.0;
-    access_log   off;
-    }
-    location = /dashboard.html {
-        root   /usr/share/nginx/html;
-    access_log   off;
-    }
-    location /swagger-ui {
-        root   /usr/share/nginx/html;
+       location /api {
+            api   write=on;
+            allow 0.0.0.0;
         access_log   off;
-}
+        }
+        location = /dashboard.html {
+            root   /usr/share/nginx/html;
+        access_log   off;
+        }
+        location /swagger-ui {
+            root   /usr/share/nginx/html;
+            access_log   off;
+    }
  }

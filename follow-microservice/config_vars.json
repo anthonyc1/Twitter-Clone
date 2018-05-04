@@ -1,7 +1,7 @@
 {
 	"secret": "sacagawea",
-	"mongodb_host": "130.245.168.164",
-	"mongodb_port": "27017",
+	"mongodb_host": "localhost",
+	"mongodb_port": "27018",
 	"mongodb_db": "twitter"
 }
 
