@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var kafka = require('../kafka/kafkaService');
-var bcrypt = require('bcrypt');
 var userService = require('../mongoose/services/userService.js');
 const saltRounds = 10;
 
@@ -110,15 +109,23 @@ router.post('/adduser', async function(req, res) {
             }
         }
     } catch (error) {
-        //user with email already exists in the database
-        if (error.errors[0] != undefined) {
-            res.send(JSON.stringify({
-                "status": "error",
-                "error": "email",
-                "errorMessage": "email already exists"
-            }));
-        } else {
-            //probably log this error
+        if(error != undefined){
+            //user with email already exists in the database
+            if (error.errors[0] != undefined) {
+                res.send(JSON.stringify({
+                    "status": "error",
+                    "error": "email",
+                    "errorMessage": "email already exists"
+                }));
+            } else {
+                //probably log this error
+                console.log(error);
+                res.send(JSON.stringify({
+                    "status": "error",
+                    "error": "Unable to create account"
+                }));
+            }
+        }else{
             console.log(error);
             res.send(JSON.stringify({
                 "status": "error",
