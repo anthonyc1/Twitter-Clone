@@ -71,9 +71,7 @@ async function likeItem(data){
             })
         }
     } else {
-        console.log(data.like)
         if (data.like){
-            console.log(data.id)
             return itemModel.update({
                 id: data.id
             }, {

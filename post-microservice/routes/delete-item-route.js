@@ -1,11 +1,9 @@
 var express = require('express'),
  bodyParser = require('body-parser'),
- Memcached = require('memcached'),
  mongoose = require('mongoose'),
  mongoose_item = require('../mongoose/services/itemService.js'),
  mongoose_media = require('../mongoose/services/mediaService.js');
 
-var memcached = new Memcached('130.245.170.73:11211');
 var lifetime = 60;
 
 var router = express.Router();
@@ -17,11 +15,12 @@ router.use(bodyParser.urlencoded({
 router.delete('/item/:id', function(req, res){
 	id = req.params.id;
 	var key = "item"+id;
+    var memcached = req.app.get('memcached');
 	var item = mongoose_item.getItem(mongoose.Types.ObjectId(id));
 	item.then(function(result){
 		if (result){
 			mongoose_item.deleteItem(mongoose.Types.ObjectId(id));
-			
+
 			var media = mongoose_media.deleteMedia(result.media);
 			media.then(function(result){
 				if (result){

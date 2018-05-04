@@ -1,12 +1,15 @@
 var express = require('express'),
  mongoose = require('mongoose'),
  cookieParser = require('cookie-parser'),
+ Memcached = require('memcached'),
  configVars = require('./config_vars');
 
 var app = express();
 app.set('port', process.env.PORT || 3001);
 app.use(cookieParser())
-app.set('configVars', configVars)
+app.set('configVars', configVars);
+var memcached = new Memcached('130.245.170.73:11211');
+app.set('memcached', memcached);
 // Routes
 app.use(require('./routes/add-item-route'));
 app.use(require('./routes/get-item-route'));

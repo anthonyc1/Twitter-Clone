@@ -7,7 +7,6 @@ var express = require('express'),
  fs = require('fs'),
  mongoose_media = require('../mongoose/services/mediaService.js');
 var randomID = require("random-id");
-
 var router = express.Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({

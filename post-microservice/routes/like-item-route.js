@@ -13,11 +13,13 @@ router.use(bodyParser.urlencoded({
 
 router.post('/item/:id/like', async function(req, res){
 	var configVars = req.app.get('configVars');
+    var memcached = req.app.get('memcached');
     try {
         var decoded = await jwt.verify((req.cookies.token), configVars.secret);
         if (decoded) {
         	var user = decoded.username;
         	var id = req.params.id;
+            var key = "item"+id;
             var like;
             if(req.body.like == undefined){
                 like = true;
@@ -33,7 +35,8 @@ router.post('/item/:id/like', async function(req, res){
 						id: result.id,
 						like: like
 					});
-                    console.log(item)
+                    memcached.delete(key, function(err){
+                    })
                     res.send({status: "OK"})
 				} else {
 					// no item found with that id

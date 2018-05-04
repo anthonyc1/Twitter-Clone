@@ -1,10 +1,8 @@
 var express = require('express'),
  bodyParser = require('body-parser'),
- Memcached = require('memcached'),
  mongoose = require('mongoose'),
  mongoose_item = require('../mongoose/services/itemService.js');
 
-var memcached = new Memcached('130.245.170.73:11211');
 var lifetime = 60;
 
 var router = express.Router();
@@ -16,7 +14,8 @@ router.use(bodyParser.urlencoded({
 router.get('/item/:id', async function(req, res){
 	let id = req.params.id;
 	var key = "item"+id;
-	var result = await getMemCache(key);
+    var memcached = req.app.get('memcached');
+	var result = await getMemCache(key, memcached);
 	if (result != undefined){
 		res.send(result);
 	} else {
@@ -45,7 +44,7 @@ router.get('/item/:id', async function(req, res){
 	}
 });
 
-function getMemCache(key){
+function getMemCache(key, memcached){
     return new Promise(function(resolve,reject){
          memcached.get(key,function(err,data){
            resolve(data);
