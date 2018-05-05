@@ -64,14 +64,17 @@ router.post('/search', async function(req, res) {
         (rank == "interest") ? (query.body.sort = { "likes" : "desc" }) : (query.body.sort = { "timestamp" : {"order" : "desc"}});
         query.body.query = {};
         query.body.query.bool = {};
-        query.body.query.bool.must = [];
-        query.body.query.bool.must[0] = {match: {content: req.body.q}};
-        (usersfollowed && following) ? (query.body.query.bool.must[1] = {terms: {username: usersfollowed}}): "";
+        if(req.body.q){
+            query.body.query.bool.must = [];
+            query.body.query.bool.must[0] = {match: {content: req.body.q}};
+        }
         query.body.query.bool.filter = [];
         query.body.query.bool.filter[0] = { range: { timestamp: { lte: timestamp }}};
         (parent) ? (query.body.query.bool.filter[1] = {match: {username: parent}}): "";
         index = query.body.query.bool.filter.length;
         (hasMedia) ? (query.body.query.bool.filter[index] = {exists: {field: media}}): "";
+        index = query.body.query.bool.filter.length;
+        (usersfollowed && following) ? (query.body.query.bool.filter[index] = {terms: {["username.keyword"]: usersfollowed}}): "";
         if(!replies){
             query.body.query.bool.must_not = [];
             query.body.query.bool.must_not[0] = {exists: {field: childType}};
@@ -81,7 +84,7 @@ router.post('/search', async function(req, res) {
         for(let i = 0; i < resp.hits.hits.length; i++){
             items.push(resp.hits.hits[i]._source);
         }
-    res.send({
+     res.send({
         status: "OK",
         items: items
     });
