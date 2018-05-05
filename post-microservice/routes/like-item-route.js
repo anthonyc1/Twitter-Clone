@@ -14,6 +14,7 @@ router.use(bodyParser.urlencoded({
 router.post('/item/:id/like', async function(req, res){
 	var configVars = req.app.get('configVars');
     var memcached = req.app.get('memcached');
+    var elasticsearch = req.app.get('elasticsearch');
     try {
         var decoded = await jwt.verify((req.cookies.token), configVars.secret);
         if (decoded) {
@@ -26,23 +27,20 @@ router.post('/item/:id/like', async function(req, res){
             }else{
                 like = req.body.like;
             }
-			var item = mongoose_item.getItem(id);
-			item.then(function(result){
-				if (result){
-					mongoose_item.likeItem({
-						item: result,
-						user: user,
-						id: result.id,
-						like: like
-					});
-                    memcached.delete(key, function(err){
-                    })
-                    res.send({status: "OK"})
-				} else {
-					// no item found with that id
-					res.send({status: "error"});
-				}
-			})
+			var item = await mongoose_item.getItem(id);
+			if (item){
+				mongoose_item.likeItem({
+					item: item,
+					user: user,
+					id: item.id,
+					like: like
+				}, elasticsearch);
+                memcached.delete(key, function(err){});
+                res.send({status: "OK"});
+			} else {
+				// no item found with that id
+				res.send({status: "error"});
+			}
 		}
 	} catch (error) {
 		res.send({

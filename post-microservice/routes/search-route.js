@@ -16,6 +16,7 @@ router.use(bodyParser.urlencoded({
 }));
 
 router.post('/search', async function(req, res) {
+    var elasticsearch = req.app.get('elasticsearch');
     var configVars = req.app.get('configVars');
     var usersfollowed = [];
     var flag = true;
@@ -41,42 +42,55 @@ router.post('/search', async function(req, res) {
         var rank = (req.body.rank) ? req.body.rank : "interest";
         var parent = req.body.parent;
         var replies = (req.body.replies != undefined) ? req.body.replies : true;
-        var hasMedia = (req.body.hasMedia != undefined) ? req.body.hasMedia : false ;
-        var key = timestamp+limit+req.body.q+usersfollowed+rank+parent+replies+hasMedia;
-        memcached.get(key, function(err, result){
-        if (result != undefined){
-            console.log("get: " + result);
-            res.send(result);
-        } else {    
-            var items = mongoose_item.searchItems({
-                timestamp: timestamp,
-                limit: limit,
-                q: req.body.q,
-                following: following,
-                usersfollowed: usersfollowed,
-                rank: rank,
-                parent: parent,
-                replies: replies,
-                hasMedia: hasMedia
-            });
-            items.then(function(items) {
-                var myObj = {
-                    status: "OK",
-                    items: items
-                };
-                memcached.set(key, myObj, lifetime, function(err, result){
-                    if (err) throw err;
-                    console.log("set: " + result);
-                })
-                res.send(myObj);
-            }).catch(err => {
-                console.log(err);
-                res.send({
-                    status: "error",
-                    error: err
-                })
-            })
-        }})
+        var hasMedia = (req.body.hasMedia != undefined) ? req.body.hasMedia : false;
+        try{
+        var items = await mongoose_item.searchItems({
+            timestamp: timestamp,
+            limit: limit,
+            q: req.body.q,
+            following: following,
+            usersfollowed: usersfollowed,
+            rank: rank,
+            parent: parent,
+            replies: replies,
+            hasMedia: hasMedia
+        });
+        var index;
+        var query = {};
+        query.size = limit;
+        query.index = 'twitter';
+        query.type = 'items';
+        query.body = {};
+        (rank == "interest") ? (query.body.sort = { "likes" : "desc" }) : (query.body.sort = { "timestamp" : {"order" : "desc"}});
+        query.body.query = {};
+        query.body.query.bool = {};
+        query.body.query.bool.must = [];
+        query.body.query.bool.must[0] = {match: {content: req.body.q}};
+        (usersfollowed && following) ? (query.body.query.bool.must[1] = {terms: {username: usersfollowed}}): "";
+        query.body.query.bool.filter = [];
+        query.body.query.bool.filter[0] = { range: { timestamp: { lte: timestamp }}};
+        (parent) ? (query.body.query.bool.filter[1] = {match: {username: parent}}): "";
+        index = query.body.query.bool.filter.length;
+        (hasMedia) ? (query.body.query.bool.filter[index] = {exists: {field: media}}): "";
+        if(!replies){
+            query.body.query.bool.must_not = [];
+            query.body.query.bool.must_not[0] = {exists: {field: childType}};
+        }
+        var resp = await elasticsearch.search(query);
+        var items = [];
+        for(let i = 0; i < resp.hits.hits.length; i++){
+            items.push(resp.hits.hits[i]._source);
+        }
+    res.send({
+        status: "OK",
+        items: items
+    });
+}catch(error){
+    console.log(error)
+    res.send({
+        status: "error"
+    });
+}
     } else {
         res.send({
             status: "error"

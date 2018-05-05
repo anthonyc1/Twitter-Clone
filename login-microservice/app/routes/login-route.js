@@ -1,3 +1,4 @@
+'login-route.js'
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
@@ -52,7 +53,7 @@ router.post('/login', async function(req, res) {
                     }
                     var authJwtToken = jwt.sign(jwtPayload, configFile.secret)
                     res.cookie('token', authJwtToken, {
-                        expires: new Date(Date.now() + 900000)
+                        expires: new Date(Date.now() + 9000000)
                     });
                     res.send(JSON.stringify({
                         "status": 'OK'
