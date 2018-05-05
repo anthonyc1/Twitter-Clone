@@ -21,6 +21,7 @@ router.post('/item/:id/like', async function(req, res){
         	var user = decoded.username;
         	var id = req.params.id;
             var key = "item"+id;
+            memcached.delete(key, function(err){});
             var like;
             if(req.body.like == undefined){
                 like = true;
@@ -35,7 +36,6 @@ router.post('/item/:id/like', async function(req, res){
 					id: item.id,
 					like: like
 				}, elasticsearch);
-                memcached.delete(key, function(err){});
                 res.send({status: "OK"});
 			} else {
 				// no item found with that id
