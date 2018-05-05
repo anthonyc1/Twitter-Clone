@@ -59,6 +59,7 @@ async function likeItem(data, elasticsearch){
         if (data.like){
             return "error"; //cannot like an item you already liked
         } else {
+            try{
             elasticsearch.update({
                 index: 'twitter',
                 type: 'items',
@@ -67,6 +68,9 @@ async function likeItem(data, elasticsearch){
                     script: "ctx._source.likes-=1"
                 }
             });
+        }catch(err){
+
+        }
             return itemModel.update({
                 id: data.id
             }, {
@@ -80,6 +84,7 @@ async function likeItem(data, elasticsearch){
         }
     } else {
         if (data.like){
+            try{
             elasticsearch.update({
                 index: 'twitter',
                 type: 'items',
@@ -88,6 +93,9 @@ async function likeItem(data, elasticsearch){
                     script: "ctx._source.likes+=1"
                 }
             });
+        }catch(err){
+
+        }
             return itemModel.update({
                 id: data.id
             }, {

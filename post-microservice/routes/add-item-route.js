@@ -47,7 +47,7 @@ router.post('/additem', async function(req, res) {
                     body: item
                 }, function(error, response) {
                     if (error) {
-                        //console.error(error);
+                        console.error(error);
                     } else {
                         //console.log(response);
                     }
