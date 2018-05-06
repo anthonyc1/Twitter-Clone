@@ -30,6 +30,11 @@ router.post('/search', async function(req, res) {
             if (decoded) {
                 var user = await mongoose_user.getFollowing(decoded.username, 100);
                 usersfollowed = user.following;
+                if(usersfollowed){
+                    for(let i = 0; i < usersfollowed.length; i++){
+                        usersfollowed[0].toLowerCase();
+                    }
+                }
             } else {
                 flag = false;
             }
