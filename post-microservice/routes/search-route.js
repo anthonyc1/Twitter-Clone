@@ -5,6 +5,9 @@ var express = require('express'),
     mongoose_item = require('../mongoose/services/itemService.js'),
     mongoose_user = require('../mongoose/services/userService.js');;
 var jwt = require('jsonwebtoken');
+var itemModel = require('../mongoose/models/Item.js');
+var sortBy = require('sort-by');
+
 
 var memcached = new Memcached('130.245.170.73:11211');
 var lifetime = 600;
@@ -44,49 +47,36 @@ router.post('/search', async function(req, res) {
         var replies = (req.body.replies != undefined) ? req.body.replies : true;
         var hasMedia = (req.body.hasMedia != undefined) ? req.body.hasMedia : false;
         try{
-        var items = await mongoose_item.searchItems({
-            timestamp: timestamp,
-            limit: limit,
-            q: req.body.q,
-            following: following,
-            usersfollowed: usersfollowed,
-            rank: rank,
-            parent: parent,
-            replies: replies,
-            hasMedia: hasMedia
-        });
         var index;
-        var query = {};
-        query.size = limit;
-        query.index = 'twitter';
-        query.type = 'items';
-        query.body = {};
-        (rank == "interest") ? (query.body.sort = { "likes" : "desc" }) : (query.body.sort = { "timestamp" : {"order" : "desc"}});
-        query.body.query = {};
-        query.body.query.bool = {};
+        var obj = {}
+        obj = {};
+        obj.size = limit;
+        obj.query = {};
+        obj.query.bool = {};
         if(req.body.q){
-            query.body.query.bool.must = [];
-            query.body.query.bool.must[0] = {match: {content: req.body.q}};
+            obj.query.bool.must = [];
+            obj.query.bool.must[0] = {match: {content: req.body.q}};
         }
-        query.body.query.bool.filter = [];
-        query.body.query.bool.filter[0] = { range: { timestamp: { lte: timestamp }}};
-        (parent) ? (query.body.query.bool.filter[1] = {match: {username: parent}}): "";
-        index = query.body.query.bool.filter.length;
-        (hasMedia) ? (query.body.query.bool.filter[index] = {exists: {field: media}}): "";
-        index = query.body.query.bool.filter.length;
-        (usersfollowed && following) ? (query.body.query.bool.filter[index] = {terms: {["username.keyword"]: usersfollowed}}): "";
+        obj.query.bool.filter = [];
+        obj.query.bool.filter[0] = { range: { timestamp: { lte: timestamp }}};
+        (parent) ? (obj.query.bool.filter[1] = {match: {username: parent}}): "";
+        index = obj.query.bool.filter.length;
+        (hasMedia) ? (obj.query.bool.filter[index] = {exists: {field: media}}): "";
+        index = obj.query.bool.filter.length;
+        (usersfollowed && following) ? (obj.query.bool.filter[index] = {terms: {["username.keyword"]: usersfollowed}}): "";
         if(!replies){
-            query.body.query.bool.must_not = [];
-            query.body.query.bool.must_not[0] = {exists: {field: childType}};
+            obj.query.bool.must_not = [];
+            obj.query.bool.must_not[0] = {exists: {field: childType}};
         }
-        var resp = await elasticsearch.search(query);
-        var items = [];
-        for(let i = 0; i < resp.hits.hits.length; i++){
-            items.push(resp.hits.hits[i]._source);
+        var resp = await itemModel.esSearch(obj, {hydrate: {docsOnly: true}})
+        if(rank == "interest"){
+            resp.sort(sortBy('-likes'));
+        }else{
+            resp.sort(sortBy('-timestamp'));
         }
      res.send({
         status: "OK",
-        items: items
+        items: resp
     });
 }catch(error){
     console.log(error)

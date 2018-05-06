@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var mexp = require('mongoose-elasticsearch-xp');
 const ItemSchema = mongoose.Schema({
-    id: {type: String, required: true, index:{unique: true}},
     username: {type: String, required: true, lowercase: true},
     content: {type: String, required: true},
     childType: {type: String},
@@ -19,7 +18,6 @@ ItemSchema.plugin(mexp,
         port: 9200,
         index: "twitter",
         type: "items"
-
     });
 
 module.exports = mongoose.model('Item', ItemSchema);

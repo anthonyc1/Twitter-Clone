@@ -3,7 +3,6 @@ var express = require('express'),
     mongoose = require('mongoose'),
     mongoose_item = require('../mongoose/services/itemService.js');
 var jwt = require('jsonwebtoken');
-var randomID = require("random-id");
 var router = express.Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({
@@ -24,11 +23,9 @@ router.post('/additem', async function(req, res) {
                     error: "unable to create user"
                 });
             else {
-                var id = randomID(24);
                 var parent = (req.body.parent) ? req.body.parent : "";
                 var media = (req.body.media) ? req.body.media : [];
                 item = {
-                    id: id,
                     username: decoded.username,
                     content: req.body.content,
                     childType: req.body.childType,
@@ -39,10 +36,10 @@ router.post('/additem', async function(req, res) {
                     media: media,
                     likedby: []
                 }
-                mongoose_item.createItem(item);
+                var item = await mongoose_item.createItem(item);
                 res.send({
                     status: "OK",
-                    id: id
+                    id: item._id
                 });
             }
         } else {

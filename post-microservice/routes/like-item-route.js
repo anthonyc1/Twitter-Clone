@@ -14,7 +14,6 @@ router.use(bodyParser.urlencoded({
 router.post('/item/:id/like', async function(req, res){
 	var configVars = req.app.get('configVars');
     var memcached = req.app.get('memcached');
-    var elasticsearch = req.app.get('elasticsearch');
     try {
         var decoded = await jwt.verify((req.cookies.token), configVars.secret);
         if (decoded) {
@@ -35,7 +34,7 @@ router.post('/item/:id/like', async function(req, res){
 					user: user,
 					id: item.id,
 					like: like
-				}, elasticsearch);
+				});
                 res.send({status: "OK"});
 			} else {
 				// no item found with that id

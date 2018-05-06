@@ -19,7 +19,12 @@ router.get('/item/:id', async function(req, res){
 	if (result != undefined){
 		res.send(result);
 	} else {
-		var item = await mongoose_item.getItem(id);
+        try{
+		    var item = await mongoose_item.getItem(id);
+        }catch(err){
+            res.send({status: "error", error: "no item found"});
+        }
+        console.log(item);
 		if (item){
 			var myObj = {status: "OK", item: {
 				id: id,

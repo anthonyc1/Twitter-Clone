@@ -1,11 +1,7 @@
 var itemModel = require('../models/Item.js');
-
 async function createItem(data) {
     var item = new itemModel(data);
-    item.save(function(err){
-        if (err) return err;
-    });
-    return item.id;
+    return item.save();
 }
 
 async function getAll() {
@@ -14,7 +10,7 @@ async function getAll() {
 
 async function getItem(id) {
     return itemModel.findOne({
-        id: id
+        _id: id
     });
 }
 
@@ -54,25 +50,13 @@ async function searchItems(data) {
 
 }
 
-async function likeItem(data, elasticsearch){
+async function likeItem(data){
     if (data.item.likedby.includes(data.user)){
         if (data.like){
             return "error"; //cannot like an item you already liked
         } else {
-            try{
-            elasticsearch.update({
-                index: 'twitter',
-                type: 'items',
-                id: data.id,
-                body:{
-                    script: "ctx._source.likes-=1"
-                }
-            });
-        }catch(err){
-
-        }
             return itemModel.update({
-                id: data.id
+                _id: data.id
             }, {
                 $pull: {
                     likedby: data.user
@@ -84,20 +68,8 @@ async function likeItem(data, elasticsearch){
         }
     } else {
         if (data.like){
-            try{
-            elasticsearch.update({
-                index: 'twitter',
-                type: 'items',
-                id: data.id,
-                body:{
-                    script: "ctx._source.likes+=1"
-                }
-            });
-        }catch(err){
-
-        }
             return itemModel.update({
-                id: data.id
+                _id: data.id
             }, {
                 $addToSet: {
                     likedby: data.user
