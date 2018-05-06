@@ -40,18 +40,6 @@ router.post('/additem', async function(req, res) {
                     likedby: []
                 }
                 mongoose_item.createItem(item);
-                elasticsearch.create({
-                    index: "twitter",
-                    type: "items",
-                    id: id,
-                    body: item
-                }, function(error, response) {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        //console.log(response);
-                    }
-                });
                 res.send({
                     status: "OK",
                     id: id

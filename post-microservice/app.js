@@ -4,7 +4,6 @@ var express = require('express'),
  Memcached = require('memcached'),
  configVars = require('./config_vars');
  var elasticsearch = require('elasticsearch');
-
 var app = express();
 app.set('port', process.env.PORT || 3001);
 app.use(cookieParser())
