@@ -16,8 +16,8 @@ router.post('/follow', async function(req, res) {
     try {
         var decoded = await jwt.verify((req.cookies.token), configVars.secret);
         if (decoded) {
-            var followed = req.body.username;
-            var follower = decoded.username;
+            var followed = req.body.username.toLowerCase();
+            var follower = decoded.username.toLowerCase();
             if (followed == follower) {
                 res.send({
                     status: "error",

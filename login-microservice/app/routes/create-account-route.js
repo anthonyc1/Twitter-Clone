@@ -81,18 +81,19 @@ router.post('/adduser', async function(req, res) {
             //removed hash to increase speed
             //var salt = bcrypt.genSaltSync(saltRounds);
             //var hash = bcrypt.hashSync(req.body.password, salt);
+            var ursername = req.body.username.toLowerCase();
             let created = await service.createUser({
-                username: req.body.username,
+                username: ursername,
                 email: req.body.email,
                 password: req.body.password
             });
             if (created[1]) {
                 let createdMongo = userService.createUser({
                     email: req.body.email,
-                    username: req.body.username
+                    username: ursername
                 });
                 kafka.sendEmail(JSON.stringify({
-                    username: req.body.username,
+                    username: ursername,
                     email: req.body.email,
                     key: created[0].dataValues.user_id
                 }));
