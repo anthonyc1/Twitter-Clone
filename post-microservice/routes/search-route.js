@@ -32,7 +32,7 @@ router.post('/search', async function(req, res) {
                 usersfollowed = user.following;
                 if(usersfollowed){
                     for(let i = 0; i < usersfollowed.length; i++){
-                        usersfollowed[0].toLowerCase();
+                        usersfollowed[i] = usersfollowed[i].toLowerCase();
                     }
                 }
             } else {
@@ -46,7 +46,7 @@ router.post('/search', async function(req, res) {
     if (flag) {
         var timestamp = (req.body.timestamp) ? req.body.timestamp : new Date().getTime();
         var limit = (req.body.limit) ? req.body.limit : 25;
-        usersfollowed = (req.body.username) ? usersfollowed.concat([req.body.username]): (usersfollowed.length == 0) ? undefined : usersfollowed;
+        usersfollowed = (req.body.username) ? usersfollowed.concat([req.body.username.toLowerCase()]): (usersfollowed.length == 0) ? undefined : usersfollowed;
         var rank = (req.body.rank) ? req.body.rank : "interest";
         var parent = req.body.parent;
         var replies = (req.body.replies != undefined) ? req.body.replies : true;
