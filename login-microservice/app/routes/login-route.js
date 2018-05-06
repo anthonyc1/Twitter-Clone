@@ -15,7 +15,6 @@ router.post('/login', async function(req, res) {
     var configFile = req.app.get('appConfig');
     var log = new Log();
     var service = req.app.get('userService');
-    var username = req.body.username.toLowerCase();
     try {
         if ((await verifyInput(req.body, log)) == false) {
             res.send(JSON.stringify({
@@ -24,7 +23,7 @@ router.post('/login', async function(req, res) {
                 "errorMessage": log.longMessage
             }));
         } else {
-            let login = await service.getUser(username);
+            let login = await service.getUser(req.body.username);
             if (!login) {
                 res.send(JSON.stringify({
                     "status": 'error',
@@ -47,7 +46,7 @@ router.post('/login', async function(req, res) {
                     }));
                 } else {
                     var jwtPayload = {
-                        username: username,
+                        username: req.body.username,
                         id: login.user_id,
                         email: login.email,
                         hash: login.hash
